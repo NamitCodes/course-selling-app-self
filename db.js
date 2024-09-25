@@ -23,8 +23,7 @@ const CreatorSchema = new Schema({
     lastName: String,
     createdCourses: [{
         type: ObjectId,
-        ref: "Course",
-        lastUpdated: Date,
+        ref: "Course"
     }]
 })
 
@@ -32,7 +31,8 @@ const CourseSchema = new Schema({
     title: String,
     description: String,
     imageUrl: String,
-    price: 5999
+    price: 5999,
+    lastUpdated: Date
 })
 
 // const PurchaseSchema = new Schema({

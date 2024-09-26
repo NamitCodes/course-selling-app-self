@@ -5,9 +5,11 @@ const { userRouter } = require("./routes/user")
 const { creatorRouter } = require("./routes/creator")
 const { courseRouter } = require("./routes/course");
 const { default: mongoose } = require('mongoose');
+const cookieParser = require("cookie-parser");
 
 const app = express()
 app.use(express.json())
+app.use(cookieParser())
 
 app.use("/user", userRouter)
 app.use("/creator", creatorRouter)

@@ -32,7 +32,7 @@ const CourseSchema = new Schema({
     title: String,
     description: String,
     imageUrl: String,
-    price: 0,
+    price: Number,
     lastUpdated: Date
 })
 

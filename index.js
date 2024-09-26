@@ -7,6 +7,7 @@ const { courseRouter } = require("./routes/course");
 const { default: mongoose } = require('mongoose');
 
 const app = express()
+app.use(express.json())
 
 app.use("/user", userRouter)
 app.use("/creator", creatorRouter)

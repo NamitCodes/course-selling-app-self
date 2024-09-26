@@ -5,6 +5,7 @@ const { userRouter } = require("./routes/user")
 const { creatorRouter } = require("./routes/creator")
 const { default: mongoose } = require('mongoose');
 const cookieParser = require("cookie-parser");
+const path = require("path")
 
 const { rateLimit } = require("express-rate-limit")
 const limiter = rateLimit({
@@ -22,7 +23,9 @@ app.use(limiter)            // rate limit
 app.use("/user", userRouter)
 app.use("/creator", creatorRouter)
 
-
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend/creator/creator-signup.html"))
+})
 async function main() {
     await mongoose.connect(process.env.MONGO_URL);
     app.listen(process.env.PORT);

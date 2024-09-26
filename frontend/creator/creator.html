@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hi, Creator</title>
+</head>
+
+<body>
+    <h2>See all courses</h2>
+    <button id="showData">SHOW</button>
+    <button id="hideData">HIDE</button>
+
+    <div id="dataAllCourses" style="display: none;"></div>
+
+    <h2>Post a new course</h2>
+
+    <h2>My Courses</h2>
+
+    <h2>Edit an existing course</h2>
+
+
+
+    <script>
+        function fetchData() {
+            fetch('/creator/courses')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();  // Parse the response as JSON
+                })
+                .then(data => {
+                    // Get the HTML element to display the data
+                    const allDataDiv = document.getElementById('dataAllCourses');
+
+                    // Update the DOM with the data
+                    console.log("data:   ", data);
+
+                    data.courses.forEach(element => {
+                        let content = `<p><strong>Title:</strong> ${element.title}</p>
+                            <p><strong>Created By:</strong> ${element.creatorId}</p>
+                            <p><strong>Description:</strong> ${element.description}</p>
+                            <p><strong>Price:</strong> ${element.price}</p>
+                            <p><strong>Image URL:</strong> ${element.imageUrl}</p>
+                            <p><strong>Last Updated:</strong> ${element.lastUpdated}</p>
+                            <hr>
+                            <br>
+                        `;
+                        allDataDiv.innerHTML += content
+                    });
+
+                    // Show the data div
+                    allDataDiv.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        }
+
+        // Show data when "SHOW" button is clicked
+        document.getElementById('showData').addEventListener('click', function () {
+            fetchData();  // Fetch and display the data
+        });
+
+        // Hide data when "HIDE" button is clicked
+        document.getElementById('hideData').addEventListener('click', function () {
+            const allDataDiv = document.getElementById('dataAllCourses');
+            allDataDiv.style.display = 'none';  // Hide the data div
+        });
+
+
+    </script>
+</body>
+
+</html>

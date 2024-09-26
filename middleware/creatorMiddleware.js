@@ -3,6 +3,7 @@ const JSON_SECRET_KEY = process.env.JSON_SECRET_KEY;
 
 function cookieJWTAuth(req,res,next){
     const token = req.cookies.token;
+    // console.log("token:    ", token)
     try{
         const creator = jwt.verify(token, JSON_SECRET_KEY);
         if (creator.id){

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
-const ObjectId = Schema.ObjectId; // mongodb's way to generate random ids
+const ObjectId = Schema.Types.ObjectId; // mongodb's way to generate random ids
 
 const UserSchema = new Schema({
     email: {type: String, unique: true}, 
@@ -33,7 +33,8 @@ const CourseSchema = new Schema({
     description: String,
     imageUrl: String,
     price: Number,
-    lastUpdated: Date
+    lastUpdated: Date,
+    creatorId: ObjectId
 })
 
 // const PurchaseSchema = new Schema({

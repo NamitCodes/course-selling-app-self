@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Sign-up</title>
+</head>
+
+<body>
+    <h1>Sign up as a Creator</h1>
+
+    <form id="myForm">
+        <input type="email" name="email" placeholder="Enter your email">
+        <input type="password" name="password" placeholder="Enter your password">
+        <input type="text" name="firstName" placeholder="Enter your firstname">
+        <input type="text" name="lastName" placeholder="Enter your lastname">
+        <button type="submit">Sign In</button>
+    </form>
+
+    
+    <script>
+        const form = document.getElementById('myForm');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            // Create an object from form data
+            const formData = new FormData(form);
+            const formObject = Object.fromEntries(formData.entries());
+
+            // Send the form data as JSON
+            fetch('/creator/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formObject)
+            }).then(response => {
+                return response.json();
+            }).then(data => {
+                console.log('Form submitted successfully:', data);
+            }).catch(error => {
+                console.error('Error submitting form:', error);
+            });
+        });
+    </script>
+</body>
+
+</html>

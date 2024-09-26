@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Log-in</title>
+</head>
+
+<body>
+    <h1>Log in as a Creator</h1>
+
+    <form id="loginForm">
+        <input type="email" name="email" placeholder="Enter your email">
+        <input type="password" name="password" placeholder="Enter your password">
+        <button type="submit">Log In</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('loginForm');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            // Extract email and password from form
+            const email = form.elements['email'].value;
+            const password = form.elements['password'].value;
+
+            // Send the email and password as headers using fetch
+            fetch('/creator/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'email': email,            // Set email in headers
+                    'password': password        // Set password in headers
+                },
+                body: JSON.stringify({}),        // Send an empty body or other data if needed
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Login successful:', data);
+                })
+                .catch(error => {
+                    console.error('Error during login:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>

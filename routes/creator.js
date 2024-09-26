@@ -1,5 +1,7 @@
 const { Router } = require("express");
 const creatorRouter = Router();
+const path  = require("path");
+let mongoose = require("mongoose")
 
 const { CreatorModel, CourseModel } = require("../db")
 
@@ -13,6 +15,11 @@ const { cookieJWTAuth } = require("../middleware/creatorMiddleware");
 // const course = require("./course");
 
 
+creatorRouter.get("/signup", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "frontend/creator/creator-signup.html"));
+
+})
+
 creatorRouter.post('/signup', async (req, res) => {
     // added zod validation
     const reqBody = z.object({
@@ -23,7 +30,6 @@ creatorRouter.post('/signup', async (req, res) => {
     })
     // const parsedData = reqBody.parse(req.body);
     const { success, data, error } = reqBody.safeParse(req.body) // this is how reqBody and req.body talk with each other
-
     // how to show the user the exact error?
     if (!success) {
         res.json({
@@ -35,6 +41,7 @@ creatorRouter.post('/signup', async (req, res) => {
 
 
     const { email, password, firstName, lastName } = req.body;
+    console.log(req.body)
 
     // hash the password so that plaintext password is not stored in db
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -64,6 +71,9 @@ creatorRouter.post('/signup', async (req, res) => {
 
 })
 
+creatorRouter.get("/login", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "frontend/creator/creator-login.html"));
+})
 creatorRouter.post('/login', async (req, res) => {
     const email = req.headers.email;
     const password = req.headers.password;
@@ -71,6 +81,8 @@ creatorRouter.post('/login', async (req, res) => {
     const creator = await CreatorModel.findOne({
         email: email
     })
+
+    // console.log("here")
 
     if (bcrypt.compare(password, creator.password)) {
         const token = jwt.sign({
@@ -93,6 +105,9 @@ creatorRouter.post('/login', async (req, res) => {
     }
 })
 
+creatorRouter.get("/", cookieJWTAuth, async (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "frontend/creator/creator.html"));
+})
 creatorRouter.post('/courses', cookieJWTAuth, async (req, res) => {
     // zod validation
     const reqBody = z.object({
@@ -122,7 +137,8 @@ creatorRouter.post('/courses', cookieJWTAuth, async (req, res) => {
             description: description,
             imageUrl: imageUrl, // check out web3 saas in 6 hours video for learning how to make so that creator is able to upload image
             price: price,
-            lastUpdated: new Date() // see if you can make this better
+            lastUpdated: new Date(), // see if you can make this better
+            creatorId: id
         })
 
         // reference this course to the creator
@@ -147,6 +163,7 @@ creatorRouter.post('/courses', cookieJWTAuth, async (req, res) => {
         }
     }
     catch (e) {
+        console.log(e)
         res.status(403).json({
             message: "Something went wrong"
         })
@@ -197,6 +214,29 @@ creatorRouter.get('/courses', cookieJWTAuth, async (req, res) => {
     res.json({
         courses: response
     })
+})
+
+creatorRouter.get("/createdCourses", cookieJWTAuth, async (req, res) => {
+    const { id } = req.body;
+    try {
+        const creator = await CreatorModel.findOne({
+            _id: id
+        }, "createdCourses")
+
+        if (!creator) {
+            res.status(404).json({
+                message: "No courses found"
+            })
+            return
+        }
+
+        res.json({
+            createdCourses: creator.createdCourses
+        })
+    } catch (e) {
+        res.status(500).json({ message: 'Server error' })
+    }
+
 })
 
 

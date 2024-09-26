@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt")
 const { z } = require("zod")
 
 const JSON_SECRET_KEY = process.env.JSON_SECRET_KEY;
-const { cookieJWTAuth, editCourseAuth } = require("../middleware/creatorMiddleware");
+const { cookieJWTAuth } = require("../middleware/creatorMiddleware");
 // const { now } = require("mongoose");
 // const course = require("./course");
 

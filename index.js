@@ -3,16 +3,15 @@ const express  = require("express");
 
 const { userRouter } = require("./routes/user")
 const { creatorRouter } = require("./routes/creator")
-const { courseRouter } = require("./routes/course");
 const { default: mongoose } = require('mongoose');
 const cookieParser = require("cookie-parser");
 
-const rateLimit = require("express-rate-limit")
+const { rateLimit } = require("express-rate-limit")
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    limit: 20, // each IP can make up to 10 requests per `windowsMs` (5 minutes)
+    standardHeaders: true, // add the `RateLimit-*` headers to the response
+    legacyHeaders: false, // remove the `X-RateLimit-*` headers from the response
 })
 
 const app = express()
@@ -22,7 +21,6 @@ app.use(limiter)            // rate limit
 
 app.use("/user", userRouter)
 app.use("/creator", creatorRouter)
-app.use("/course", courseRouter)
 
 
 async function main() {
